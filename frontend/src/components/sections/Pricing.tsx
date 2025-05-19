@@ -65,7 +65,7 @@ export default function Pricing() {
         <p className="mx-auto mt-6 max-w-2xl text-center text-lg leading-8 text-gray-600">
           Whether you're just starting out or need advanced features, we have a plan that fits your needs.
         </p>
-        <div className="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+        <div className="isolate mx-auto mt-16 grid max-w-md grid-cols-1 gap-y-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3 lg:gap-x-12">
           {tiers.map((tier) => (
             <div
               key={tier.id}
