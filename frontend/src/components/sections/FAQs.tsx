@@ -12,7 +12,7 @@ const faqs = [
   },
   {
     question: 'What happens if my schedule changes?',
-    answer: 'You can easily update your schedule at any time. Just upload a new CSV file or make manual changes, and we'll automatically update your calendar and send notifications about the changes.',
+    answer: "You can easily update your schedule at any time. Just upload a new CSV file or make manual changes, and we'll automatically update your calendar and send notifications about the changes.",
   },
   {
     question: 'Is my data secure?',
