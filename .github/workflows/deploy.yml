@@ -81,3 +81,5 @@ jobs:
             -d chat_id="$TELEGRAM_CHAT_ID" \
             -d text="❌ CI/CD Gagal!%0AProject *Calendo-FE* gagal dideploy ke VPS ⚠️%0A%0A📝 *Commit:* \`$COMMIT_MESSAGE\`%0A👤 *Author:* $AUTHOR_NAME%0A🔗 [Lihat Commit]($COMMIT_URL)" \
             -d parse_mode=Markdown
+            
+# Test GA 1
