@@ -3,9 +3,9 @@ FROM nginx:alpine
 
 # Copy hasil build
 COPY out/ /usr/share/nginx/html
-    
+
 # Ganti default config NGINX
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY default.conf /etc/nginx/conf.d/default.conf
 
 # Expose port
 EXPOSE 3002
