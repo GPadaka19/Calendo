@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  calendo-fe:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: calendo-fe
+    restart: always
+    ports:
+      - "3002:80"
+    networks:
+      - calendo-network
+
+networks:
+  calendo-network:
+    name: calendo-network
+    driver: bridge 
