@@ -4,8 +4,8 @@ const testimonials = [
   {
     content: "Calendo has been a game-changer for my academic life. The Google Calendar sync is seamless, and I never miss a class anymore!",
     author: {
-      name: "Sarah Chen",
-      role: "Computer Science Student",
+      name: "Muhammad Naafi Ilalang",
+      role: "22.11.5011",
       image: "/testimonials/placeholder.svg",
     },
   },
@@ -20,8 +20,8 @@ const testimonials = [
   {
     content: "The CSV upload feature saved me so much time. I just downloaded my schedule from my university portal and uploaded it to Calendo. Everything was set up in minutes!",
     author: {
-      name: "Emma Thompson",
-      role: "Medical Student",
+      name: "Faruq Putra Ahmadi",
+      role: "22.11.5047",
       image: "/testimonials/placeholder.svg",
     },
   },
