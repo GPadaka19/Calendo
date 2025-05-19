@@ -12,8 +12,8 @@ const testimonials = [
   {
     content: "As someone who takes classes across multiple departments, Calendo's schedule management is exactly what I needed. The conflict detection feature is brilliant.",
     author: {
-      name: "Michael Rodriguez",
-      role: "Business & Engineering Student",
+      name: "Gusti Padaka",
+      role: "22.11.5020",
       image: "/testimonials/placeholder.svg",
     },
   },
