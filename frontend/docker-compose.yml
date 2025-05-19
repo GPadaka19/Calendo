@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   calendo-fe:
+    image: calendo-fe:latest
     build:
       context: .
       dockerfile: Dockerfile
