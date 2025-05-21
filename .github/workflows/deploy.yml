@@ -36,7 +36,10 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "frontend/out,frontend/Dockerfile,frontend/docker-compose.yml,frontend/default.conf"
-          target: "~/Calendo/frontend"
+          target: "~/Calendo"
+      
+          strip_components: 1
+          
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -81,4 +84,4 @@ jobs:
             -d text="❌ CI/CD Gagal!%0AProject *Calendo-FE* gagal dideploy ke VPS ⚠️%0A%0A📝 *Commit:* \`$COMMIT_MESSAGE\`%0A👤 *Author:* $AUTHOR_NAME%0A🔗 [Lihat Commit]($COMMIT_URL)" \
             -d parse_mode=Markdown
 
-        # Test GA 4
+        # Test GA 5
