@@ -6,7 +6,7 @@ const testimonials = [
     author: {
       name: "Muhammad Naafi Ilalang",
       role: "22.11.5011",
-      image: "/testimonials/placeholder.svg",
+      image: "https://fotomhs.amikom.ac.id/2022/22_11_5011.jpg",
     },
   },
   {
@@ -14,7 +14,7 @@ const testimonials = [
     author: {
       name: "Gusti Padaka",
       role: "22.11.5020",
-      image: "/testimonials/placeholder.svg",
+      image: "https://fotomhs.amikom.ac.id/2022/22_11_5020.jpg",
     },
   },
   {
@@ -22,7 +22,7 @@ const testimonials = [
     author: {
       name: "Faruq Putra Ahmadi",
       role: "22.11.5047",
-      image: "/testimonials/placeholder.svg",
+      image: "https://fotomhs.amikom.ac.id/2022/22_11_5047.jpg",
     },
   },
 ];
@@ -41,18 +41,21 @@ export default function Testimonials() {
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((testimonial, index) => (
               <div key={index} className="pt-8 sm:inline-block sm:w-full sm:px-4">
-                <figure className="rounded-2xl bg-gray-50 p-8 text-sm leading-6">
-                  <blockquote className="text-gray-900">
+                <figure className="rounded-2xl bg-gray-100 p-8 text-sm leading-6 h-[250px] flex flex-col">
+                  <blockquote className="text-gray-900 flex-grow">
                     <p>{`"${testimonial.content}"`}</p>
                   </blockquote>
                   <figcaption className="mt-6 flex items-center gap-x-4">
-                    <div className="relative h-10 w-10 rounded-full bg-gray-50">
+                    <div className="relative h-10 w-10 rounded-full overflow-hidden">
                       <Image
-                        className="rounded-full"
+                        className="rounded-full object-cover"
                         src={testimonial.author.image}
                         alt={testimonial.author.name}
                         width={40}
                         height={40}
+                        style={{
+                          objectPosition: 'center 20%',
+                        }}
                       />
                     </div>
                     <div>
