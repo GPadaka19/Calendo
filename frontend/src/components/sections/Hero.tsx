@@ -8,7 +8,7 @@ export default function Hero() {
         <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-8">
           <h1 className="mt-10 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
             Your Class Schedule,
-            <span className="text-indigo-600 block">Simplified</span>
+            <span className="text-indigo-600 block">TEST CI/CD</span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
             Upload your class schedule once, and let Calendo handle the rest. 
