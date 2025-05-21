@@ -1,10 +1,13 @@
+'use client';
+
 import Link from 'next/link';
 import NewsletterForm from '../NewsletterForm';
+import { scrollToSection } from '@/utils/scrollUtils';
 
 const navigation = {
   main: [
     { name: 'About', href: '/about' },
-    { name: 'Pricing', href: '/pricing' },
+    { name: 'Pricing', href: '#', onClick: () => scrollToSection('pricing-section') },
     { name: 'Contact', href: '/contact' },
     { name: 'Privacy Policy', href: '/privacy' },
     { name: 'Terms of Service', href: '/terms' },
@@ -75,9 +78,18 @@ export default function Footer() {
             <ul className="mt-4 space-y-4">
               {navigation.main.map((item) => (
                 <li key={item.name}>
-                  <Link href={item.href} className="text-base text-gray-600 hover:text-gray-900">
-                    {item.name}
-                  </Link>
+                  {item.onClick ? (
+                    <button
+                      onClick={item.onClick}
+                      className="text-base text-gray-600 hover:text-gray-900 cursor-pointer"
+                    >
+                      {item.name}
+                    </button>
+                  ) : (
+                    <Link href={item.href} className="text-base text-gray-600 hover:text-gray-900">
+                      {item.name}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
