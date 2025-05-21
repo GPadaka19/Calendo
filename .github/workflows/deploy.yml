@@ -46,9 +46,10 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/Calendo
-            # Stop containers if they exist
-            sudo docker compose down --remove-orphans || true
-            # Remove image if it exists
+            # Stop and remove the specific container
+            sudo docker stop calendo-fe || true
+            sudo docker rm calendo-fe || true
+            # Remove the image
             sudo docker rmi frontend_calendo-fe || true
             # Build and start
             sudo docker compose build
