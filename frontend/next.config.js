@@ -2,7 +2,8 @@
 const nextConfig = {
   output: 'export',
   images: {
-    domains: ['localhost'],
+    unoptimized: true,
+    domains: ['localhost', 'fotomhs.amikom.ac.id'],
   },
   eslint: {
     ignoreDuringBuilds: true,
