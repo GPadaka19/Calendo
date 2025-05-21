@@ -28,7 +28,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             rm -rf ~/Calendo
-            mkdir -p ~/Calendo/frontend
 
       - name: Copy dist & docker files to VPS
         uses: appleboy/scp-action@v0.1.4
