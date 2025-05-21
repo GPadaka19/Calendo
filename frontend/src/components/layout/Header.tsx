@@ -30,7 +30,7 @@ export default function Header() {
           <div className="flex items-center space-x-4">
             <button 
               onClick={scrollToPricing}
-              className="text-gray-600 hover:text-gray-900"
+              className="text-gray-600 hover:text-gray-900 cursor-pointer"
             >
               Pricing
             </button>
