@@ -37,8 +37,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "frontend/out,frontend/Dockerfile,frontend/docker-compose.yml,frontend/default.conf"
           target: "~/Calendo"
-      
-          strip_components: 1
+
           
 
       - name: Deploy via SSH
