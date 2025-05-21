@@ -2,7 +2,6 @@
 const sectionOffsets = {
   'features-section': -5,
   'pricing-section': -110,
-  'about-section': -90,
   'contact-section': -100,
   'privacy-section': -80,
   'terms-section': -80,
