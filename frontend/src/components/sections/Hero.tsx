@@ -2,22 +2,9 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { scrollToSection } from '@/utils/scrollUtils';
 
 export default function Hero() {
-  const scrollToPricing = () => {
-    const pricingSection = document.getElementById('pricing-section');
-    if (pricingSection) {
-      const headerOffset = -110; // Menggunakan offset yang sama dengan Header
-      const elementPosition = pricingSection.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
-
   return (
     <div className="relative isolate overflow-hidden bg-white">
       <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 sm:pb-32 lg:flex lg:px-8 lg:py-40">
@@ -38,7 +25,7 @@ export default function Hero() {
               Get Started
             </Link>
             <button
-              onClick={scrollToPricing}
+              onClick={() => scrollToSection('pricing-section')}
               className="text-sm font-semibold leading-6 text-gray-900 hover:text-indigo-600 cursor-pointer"
             >
               View Pricing <span aria-hidden="true">→</span>
