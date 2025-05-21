@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { scrollToSection } from '@/utils/scrollUtils';
 
@@ -18,12 +17,12 @@ export default function Hero() {
             Sync with Google Calendar, get reminders, and never miss a class again.
           </p>
           <div className="mt-10 flex items-center gap-x-6">
-            <Link
-              href="/signup"
-              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            <button
+              onClick={() => scrollToSection('features-section')}
+              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer"
             >
               Get Started
-            </Link>
+            </button>
             <button
               onClick={() => scrollToSection('pricing-section')}
               className="text-sm font-semibold leading-6 text-gray-900 hover:text-indigo-600 cursor-pointer"

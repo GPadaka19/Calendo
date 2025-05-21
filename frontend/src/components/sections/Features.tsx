@@ -24,7 +24,7 @@ const features = [
 
 export default function Features() {
   return (
-    <div className="bg-white py-24 sm:py-32">
+    <div id="features-section" className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
           <h2 className="text-base font-semibold leading-7 text-indigo-600">
@@ -34,7 +34,7 @@ export default function Features() {
             Everything you need to manage your classes
           </p>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Calendo makes it easy to organize your academic life. Upload your schedule once, and we'll handle the rest.
+            Calendo makes it easy to organize your academic life. Upload your schedule once, and we&apos;ll handle the rest.
           </p>
         </div>
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
