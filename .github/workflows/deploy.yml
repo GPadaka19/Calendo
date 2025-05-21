@@ -28,6 +28,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             rm -rf ~/Calendo
+            mkdir -p ~/Calendo/frontend
 
       - name: Copy dist & docker files to VPS
         uses: appleboy/scp-action@v0.1.4
@@ -37,18 +38,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "frontend/dist,frontend/Dockerfile,frontend/docker-compose.yml,frontend/nginx.conf"
           target: "~/Calendo/frontend"
-
-      - name: Rename files for Docker
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd ~/Calendo/frontend
-            # Rename files to match Dockerfile expectations
-            mv nginx.conf default.conf
-            mv dist out
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
