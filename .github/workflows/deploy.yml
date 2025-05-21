@@ -37,18 +37,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "frontend/dist,frontend/Dockerfile,frontend/docker-compose.yml,frontend/nginx.conf"
           target: "~/Calendo"
-          strip_components: 1
-
-      - name: Verify files on VPS
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd ~/Calendo
-            ls -la
-            cat docker-compose.yml
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -57,13 +45,8 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/Calendo/frontend
-            # Stop and remove the specific container
-            sudo docker stop calendo-fe || true
-            sudo docker rm calendo-fe || true
-            # Remove the image
-            sudo docker rmi frontend_calendo-fe || true
-            # Build and start
+            cd ~/Calendo
+            sudo docker compose down
             sudo docker compose build
             sudo docker compose up -d
             sudo docker image prune -f
@@ -97,5 +80,3 @@ jobs:
             -d chat_id="$TELEGRAM_CHAT_ID" \
             -d text="❌ CI/CD Gagal!%0AProject *Calendo-FE* gagal dideploy ke VPS ⚠️%0A%0A📝 *Commit:* \`$COMMIT_MESSAGE\`%0A👤 *Author:* $AUTHOR_NAME%0A🔗 [Lihat Commit]($COMMIT_URL)" \
             -d parse_mode=Markdown
-            
-# Test GA 1
