@@ -9,11 +9,11 @@ type IconProps = SVGProps<SVGSVGElement>;
 
 const navigation = {
   main: [
-    { name: 'About', href: '/about' },
+    { name: 'About', href: '#', onClick: () => scrollToSection('features-section') },
     { name: 'Pricing', href: '#', onClick: () => scrollToSection('pricing-section') },
-    { name: 'Contact', href: '/contact' },
-    { name: 'Privacy Policy', href: '/privacy' },
-    { name: 'Terms of Service', href: '/terms' },
+    { name: 'Contact', href: 'mailto:support@calendo.gpadaka.com' },
+    { name: 'Privacy Policy', href: '#', onClick: () => scrollToSection('privacy-section') },
+    { name: 'Terms of Service', href: '#', onClick: () => scrollToSection('terms-section') },
   ],
   social: [
     {
@@ -89,7 +89,10 @@ export default function Footer() {
                       {item.name}
                     </button>
                   ) : (
-                    <Link href={item.href} className="text-base text-gray-600 hover:text-gray-900">
+                    <Link 
+                      href={item.href} 
+                      className="text-base text-gray-600 hover:text-gray-900"
+                    >
                       {item.name}
                     </Link>
                   )}
