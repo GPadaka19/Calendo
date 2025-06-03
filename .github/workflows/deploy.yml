@@ -130,6 +130,7 @@ jobs:
             backend/internal
             .env
           target: ~/Calendo
+          debug: true
 
       - name: Deploy backend and frontend with Docker Compose on VPS
         uses: appleboy/ssh-action@v1.0.0
