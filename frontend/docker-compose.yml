@@ -1,17 +1,15 @@
 services:
   calendo-fe:
+    build: .
     image: calendo-fe:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
     container_name: calendo-fe
-    restart: always
     ports:
       - "3002:80"
     networks:
       - calendo-network
+    restart: always
 
 networks:
   calendo-network:
     name: calendo-network
-    driver: bridge 
+    external: true 
