@@ -55,7 +55,6 @@ jobs:
           go mod verify
           go build -o main ./cmd
 
-
   build-frontend:
     name: Build Frontend
     needs: build-backend
@@ -100,8 +99,30 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "frontend/out,frontend/Dockerfile,frontend/docker-compose.yml,frontend/default.conf,backend/docker-compose.yml,backend/Dockerfile,backend/database,backend/go.mod,backend/go.sum,backend/cmd,backend/internal,.env"
+          source: "frontend/out,frontend/Dockerfile,frontend/docker-compose.yml,frontend/default.conf,backend/docker-compose.yml,backend/Dockerfile,backend/database,backend/go.mod,backend/go.sum,backend/cmd,backend/internal"
           target: "~/Calendo"
+
+      - name: Generate and deploy .env file from secrets
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Generating .env file..."
+            cat <<EOF > ~/Calendo/.env
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+            DB_NAME=${{ secrets.DB_NAME }}
+            N8N_API_URL=${{ secrets.N8N_API_URL }}
+            N8N_API_KEY=${{ secrets.N8N_API_KEY }}
+            N8N_ENCRYPTION_KEY=${{ secrets.N8N_ENCRYPTION_KEY }}
+            N8N_HOST=${{ secrets.N8N_HOST }}
+            N8N_PROTOCOL=${{ secrets.N8N_PROTOCOL }}
+            EOF
+            echo ".env file generated at ~/Calendo/.env"
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.0
@@ -111,30 +132,37 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/Calendo
-            # Verify .env file
+
             echo "Checking .env file..."
-            ls -la .env
-            echo "Checking if required variables exist (without showing values)..."
+            if [ -f ".env" ]; then
+              echo ".env file found ✅"
+            else
+              echo "❌ .env file not found! Deployment aborted."
+              exit 1
+            fi
+
+            echo "Verifying required .env variables..."
             grep -q "DB_HOST" .env && echo "DB_HOST exists" || echo "DB_HOST missing"
             grep -q "DB_PORT" .env && echo "DB_PORT exists" || echo "DB_PORT missing"
             grep -q "DB_USER" .env && echo "DB_USER exists" || echo "DB_USER missing"
             grep -q "DB_PASSWORD" .env && echo "DB_PASSWORD exists" || echo "DB_PASSWORD missing"
             grep -q "DB_NAME" .env && echo "DB_NAME exists" || echo "DB_NAME missing"
-            
-            # Deploy backend first
+
+            echo "Deploying Backend..."
             cd backend
-            # Use go.sum from local
             go mod download
             go mod verify
             sudo docker compose down
             sudo docker compose build --no-cache
             sudo docker compose up -d
-            # Deploy frontend
+
+            echo "Deploying Frontend..."
             cd ../frontend
             sudo docker compose down
             sudo docker compose build --no-cache
             sudo docker compose up -d
-            # Cleanup
+
+            echo "Cleaning up unused Docker images..."
             sudo docker image prune -f
 
       - name: Send Telegram notification (Success)
@@ -146,10 +174,10 @@ jobs:
           COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
           AUTHOR_NAME=$(git log -1 --pretty=format:"%an")
           COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-          
+
           curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \
             -d chat_id="$TELEGRAM_CHAT_ID" \
-            -d text="✅ CI/CD Sukses!%0AProject *Calendo* berhasil dideploy ke VPS 🎉%0A%0A📝 *Commit:* \`$COMMIT_MESSAGE\`%0A👤 *Author:* $AUTHOR_NAME%0A🔗 [Lihat Commit]($COMMIT_URL)" \
+            -d text="✅ CI/CD Sukses!%0AProject *Calendo* berhasil dideploy ke VPS.%0A%0A📝 *Commit:* \`$COMMIT_MESSAGE\`%0A👤 *Author:* $AUTHOR_NAME%0A🔗 [Lihat Commit]($COMMIT_URL)" \
             -d parse_mode=Markdown
 
       - name: Send failure Telegram notification
@@ -161,9 +189,8 @@ jobs:
           COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")
           AUTHOR_NAME=$(git log -1 --pretty=format:"%an")
           COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-          
+
           curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \
             -d chat_id="$TELEGRAM_CHAT_ID" \
-            -d text="❌ CI/CD Gagal!%0AProject *Calendo* gagal dideploy ke VPS ⚠️%0A%0A📝 *Commit:* \`$COMMIT_MESSAGE\`%0A👤 *Author:* $AUTHOR_NAME%0A🔗 [Lihat Commit]($COMMIT_URL)" \
+            -d text="❌ CI/CD Gagal!%0AProject *Calendo* gagal dideploy ke VPS.%0A%0A📝 *Commit:* \`$COMMIT_MESSAGE\`%0A👤 *Author:* $AUTHOR_NAME%0A🔗 [Lihat Commit]($COMMIT_URL)" \
             -d parse_mode=Markdown
-            
