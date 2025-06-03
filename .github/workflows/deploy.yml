@@ -117,17 +117,17 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: |
-            frontend/out,
-            frontend/Dockerfile,
-            frontend/docker-compose.yml,
-            frontend/default.conf,
-            backend/docker-compose.yml,
-            backend/Dockerfile,
-            backend/database,
-            backend/go.mod,
-            backend/go.sum,
-            backend/cmd,
-            backend/internal,
+            frontend/out
+            frontend/Dockerfile
+            frontend/docker-compose.yml
+            frontend/default.conf
+            backend/docker-compose.yml
+            backend/Dockerfile
+            backend/database
+            backend/go.mod
+            backend/go.sum
+            backend/cmd
+            backend/internal
             .env
           target: ~/Calendo
 
@@ -139,6 +139,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/Calendo
+            echo "Listing Calendo folder content:"
+            ls -l
 
             echo "Check .env file existence and content:"
             if [ -f ".env" ]; then
