@@ -1,23 +1,4 @@
 services:
-  n8n:
-    image: n8nio/n8n
-    container_name: calendo-be
-    ports:
-      - "5678:5678"
-    environment:
-      - N8N_HOST=${N8N_HOST}
-      - N8N_PORT=5678
-      - N8N_PROTOCOL=${N8N_PROTOCOL}
-      - DB_TYPE=postgresdb
-      - DB_POSTGRES_HOST=${POSTGRES_HOST}
-      - DB_POSTGRES_DATABASE=${POSTGRES_DB}
-      - DB_POSTGRES_USER=${POSTGRES_USER}
-      - DB_POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
-    networks:
-      - calendo-network
-    restart: unless-stopped
-
   backend:
     build: .
     container_name: calendo-backend
