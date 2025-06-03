@@ -55,16 +55,6 @@ jobs:
           go mod verify
           go build -o main ./cmd
 
-      - name: Run Backend Binary with injected env
-        run: |
-          cd backend
-          ./main
-        env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
 
   build-frontend:
     name: Build Frontend
