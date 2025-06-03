@@ -110,6 +110,15 @@ jobs:
           script: |
             rm -rf ~/Calendo
 
+      - name: List files before copying
+        run: |
+          echo "Listing frontend files:"
+          ls -la frontend/
+          echo "Listing backend files:"
+          ls -la backend/
+          echo "Listing .env file:"
+          ls -la .env
+
       - name: Copy project files + .env to VPS
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -130,6 +139,7 @@ jobs:
             ./backend/internal
             ./.env
           target: ~/Calendo
+          debug: true
 
       - name: Deploy backend and frontend with Docker Compose on VPS
         uses: appleboy/ssh-action@v1.0.0
