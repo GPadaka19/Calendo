@@ -1,20 +1,22 @@
 services:
   calendo-be:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: calendo-be:latest
     container_name: calendo-be
     ports:
       - "8080:8080"
     env_file:
       - ../.env
-    environment:
-      - N8N_API_URL=${N8N_API_URL}
-      - N8N_API_KEY=${N8N_API_KEY}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
+    # environment:
+    #   - N8N_API_URL=${N8N_API_URL}
+    #   - N8N_API_KEY=${N8N_API_KEY}
+    #   - DB_HOST=${DB_HOST}
+    #   - DB_PORT=${DB_PORT}
+    #   - DB_USER=${DB_USER}
+    #   - DB_PASSWORD=${DB_PASSWORD}
+    #   - DB_NAME=${DB_NAME}
     networks:
       - calendo-network
     restart: unless-stopped
@@ -26,4 +28,4 @@ volumes:
 networks:
   calendo-network:
     name: calendo-network
-    external: true 
+    external: true

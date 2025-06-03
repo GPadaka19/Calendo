@@ -31,12 +31,6 @@ jobs:
           go-version: '1.21'
           cache: true
 
-      - name: List files in backend directory
-        run: ls -l backend
-
-      - name: Show contents of backend/go.sum
-        run: cat backend/go.sum || echo "go.sum not found"
-
       - name: Cache Go dependencies
         uses: actions/cache@v3
         with:
@@ -73,18 +67,41 @@ jobs:
       - name: Install dependencies & build frontend
         run: |
           cd frontend
-          npm ci
+          npm install
           npm run build
+
+  create-env:
+    name: Create .env file
+    needs: [build-backend, build-frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create .env file from secrets
+        run: |
+          cat <<EOF > .env
+DB_HOST=${{ secrets.DB_HOST }}
+DB_PORT=${{ secrets.DB_PORT }}
+DB_USER=${{ secrets.DB_USER }}
+DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+DB_NAME=${{ secrets.DB_NAME }}
+N8N_API_URL=${{ secrets.N8N_API_URL }}
+N8N_API_KEY=${{ secrets.N8N_API_KEY }}
+N8N_ENCRYPTION_KEY=${{ secrets.N8N_ENCRYPTION_KEY }}
+N8N_HOST=${{ secrets.N8N_HOST }}
+N8N_PROTOCOL=${{ secrets.N8N_PROTOCOL }}
+EOF
+
+      - name: List .env file content for debug
+        run: cat .env
 
   deploy:
     name: Deploy to VPS
-    needs: [build-backend, build-frontend]
+    needs: create-env
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Clean old project folder
+      - name: Clean old project folder on VPS
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -93,38 +110,28 @@ jobs:
           script: |
             rm -rf ~/Calendo
 
-      - name: Copy project files to VPS
+      - name: Copy project files + .env to VPS
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "frontend/out,frontend/Dockerfile,frontend/docker-compose.yml,frontend/default.conf,backend/docker-compose.yml,backend/Dockerfile,backend/database,backend/go.mod,backend/go.sum,backend/cmd,backend/internal"
-          target: "~/Calendo"
+          source: |
+            frontend/out,
+            frontend/Dockerfile,
+            frontend/docker-compose.yml,
+            frontend/default.conf,
+            backend/docker-compose.yml,
+            backend/Dockerfile,
+            backend/database,
+            backend/go.mod,
+            backend/go.sum,
+            backend/cmd,
+            backend/internal,
+            .env
+          target: ~/Calendo
 
-      - name: Generate and deploy .env file from secrets
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            echo "Generating .env file..."
-            cat <<EOF > ~/Calendo/.env
-            DB_HOST=${{ secrets.DB_HOST }}
-            DB_PORT=${{ secrets.DB_PORT }}
-            DB_USER=${{ secrets.DB_USER }}
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            DB_NAME=${{ secrets.DB_NAME }}
-            N8N_API_URL=${{ secrets.N8N_API_URL }}
-            N8N_API_KEY=${{ secrets.N8N_API_KEY }}
-            N8N_ENCRYPTION_KEY=${{ secrets.N8N_ENCRYPTION_KEY }}
-            N8N_HOST=${{ secrets.N8N_HOST }}
-            N8N_PROTOCOL=${{ secrets.N8N_PROTOCOL }}
-            EOF
-            echo ".env file generated at ~/Calendo/.env"
-
-      - name: Deploy via SSH
+      - name: Deploy backend and frontend with Docker Compose on VPS
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -133,20 +140,14 @@ jobs:
           script: |
             cd ~/Calendo
 
-            echo "Checking .env file..."
+            echo "Check .env file existence and content:"
             if [ -f ".env" ]; then
-              echo ".env file found ✅"
+              echo ".env found ✅"
+              head -n 10 .env
             else
-              echo "❌ .env file not found! Deployment aborted."
+              echo "❌ .env file not found! Abort deployment."
               exit 1
             fi
-
-            echo "Verifying required .env variables..."
-            grep -q "DB_HOST" .env && echo "DB_HOST exists" || echo "DB_HOST missing"
-            grep -q "DB_PORT" .env && echo "DB_PORT exists" || echo "DB_PORT missing"
-            grep -q "DB_USER" .env && echo "DB_USER exists" || echo "DB_USER missing"
-            grep -q "DB_PASSWORD" .env && echo "DB_PASSWORD exists" || echo "DB_PASSWORD missing"
-            grep -q "DB_NAME" .env && echo "DB_NAME exists" || echo "DB_NAME missing"
 
             echo "Deploying Backend..."
             cd backend
@@ -180,7 +181,7 @@ jobs:
             -d text="✅ CI/CD Sukses!%0AProject *Calendo* berhasil dideploy ke VPS.%0A%0A📝 *Commit:* \`$COMMIT_MESSAGE\`%0A👤 *Author:* $AUTHOR_NAME%0A🔗 [Lihat Commit]($COMMIT_URL)" \
             -d parse_mode=Markdown
 
-      - name: Send failure Telegram notification
+      - name: Send Telegram notification (Failure)
         if: failure()
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -194,4 +195,3 @@ jobs:
             -d chat_id="$TELEGRAM_CHAT_ID" \
             -d text="❌ CI/CD Gagal!%0AProject *Calendo* gagal dideploy ke VPS.%0A%0A📝 *Commit:* \`$COMMIT_MESSAGE\`%0A👤 *Author:* $AUTHOR_NAME%0A🔗 [Lihat Commit]($COMMIT_URL)" \
             -d parse_mode=Markdown
-            
