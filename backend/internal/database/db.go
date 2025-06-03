@@ -24,14 +24,24 @@ type Config struct {
 }
 
 // NewConfig creates a new database config from environment variables
-func NewConfig() *Config {
-	return &Config{
-		Host:     getEnv("DB_HOST", "localhost"),
-		Port:     getEnv("DB_PORT", "5432"),
-		User:     getEnv("DB_USER", "admin"),
-		Password: getEnv("DB_PASSWORD", "changeme"),
-		DBName:   getEnv("DB_NAME", "calendo"),
+func NewConfig() (*Config, error) {
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+
+	if host == "" || port == "" || user == "" || password == "" || dbName == "" {
+		return nil, fmt.Errorf("missing required database environment variables")
 	}
+
+	return &Config{
+		Host:     host,
+		Port:     port,
+		User:     user,
+		Password: password,
+		DBName:   dbName,
+	}, nil
 }
 
 // Connect establishes a connection to the database
@@ -64,6 +74,12 @@ func Connect(cfg *Config) error {
 	}
 
 	log.Println("Successfully connected to database")
+
+	// Run migrations
+	if err := runMigrations(); err != nil {
+		return fmt.Errorf("failed to run migrations: %v", err)
+	}
+
 	return nil
 }
 
@@ -79,10 +95,20 @@ func Close() {
 	}
 }
 
-// Helper function to get environment variable with fallback
-func getEnv(key, fallback string) string {
-	if value, exists := os.LookupEnv(key); exists {
-		return value
+// runMigrations executes all SQL files in the migrations directory
+func runMigrations() error {
+	// Read and execute initial schema
+	schema, err := os.ReadFile("database/migrations/001_initial_schema.sql")
+	if err != nil {
+		return fmt.Errorf("error reading migration file: %v", err)
 	}
-	return fallback
-} 
+
+	// Execute the migration
+	_, err = pool.Exec(context.Background(), string(schema))
+	if err != nil {
+		return fmt.Errorf("error executing migration: %v", err)
+	}
+
+	log.Println("Successfully ran database migrations")
+	return nil
+}

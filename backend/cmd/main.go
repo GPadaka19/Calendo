@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"github.com/calendo/backend/internal/database"
+	"github.com/calendo/backend/internal/n8n"
 )
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {
@@ -21,14 +22,26 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	// Initialize database connection
-	dbConfig := database.NewConfig()
+	dbConfig, err := database.NewConfig()
+	if err != nil {
+		log.Fatalf("Failed to create database config: %v", err)
+	}
+
 	if err := database.Connect(dbConfig); err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 	defer database.Close()
 
+	// Initialize n8n client
+	n8nClient, err := n8n.NewClient()
+	if err != nil {
+		log.Fatalf("Failed to create n8n client: %v", err)
+	}
+	webhookHandler := n8n.NewWebhookHandler(n8nClient)
+
 	// Register routes
 	http.HandleFunc("/health", healthCheck)
+	http.HandleFunc("/webhook", webhookHandler.HandleWebhook)
 
 	// Start server
 	port := ":8080"
@@ -53,4 +66,4 @@ func main() {
 	case sig := <-shutdown:
 		log.Printf("Server is shutting down due to %v signal", sig)
 	}
-} 
+}
