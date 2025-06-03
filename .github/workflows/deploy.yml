@@ -47,7 +47,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "frontend/out,frontend/Dockerfile,frontend/docker-compose.yml,frontend/default.conf,backend/docker-compose.yml,backend/Dockerfile,backend/database"
+          source: "frontend/out,frontend/Dockerfile,frontend/docker-compose.yml,frontend/default.conf,backend/docker-compose.yml,backend/Dockerfile,backend/database,backend/go.mod,backend/go.sum,backend/cmd,backend/internal"
           target: "~/Calendo"
 
       - name: Deploy via SSH
