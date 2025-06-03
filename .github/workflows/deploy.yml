@@ -117,19 +117,19 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: |
-            frontend/out
-            frontend/Dockerfile
-            frontend/docker-compose.yml
-            frontend/default.conf
-            backend/docker-compose.yml
-            backend/Dockerfile
-            backend/database
-            backend/go.mod
-            backend/go.sum
-            backend/cmd
-            backend/internal
-            .env
-
+            ./frontend/out
+            ./frontend/Dockerfile
+            ./frontend/docker-compose.yml
+            ./frontend/default.conf
+            ./backend/docker-compose.yml
+            ./backend/Dockerfile
+            ./backend/database
+            ./backend/go.mod
+            ./backend/go.sum
+            ./backend/cmd
+            ./backend/internal
+            ./.env
+          target: ~/Calendo
 
       - name: Deploy backend and frontend with Docker Compose on VPS
         uses: appleboy/ssh-action@v1.0.0
@@ -197,4 +197,3 @@ jobs:
             -d chat_id="$TELEGRAM_CHAT_ID" \
             -d text="❌ CI/CD Gagal!%0AProject *Calendo* gagal dideploy ke VPS.%0A%0A📝 *Commit:* \`$COMMIT_MESSAGE\`%0A👤 *Author:* $AUTHOR_NAME%0A🔗 [Lihat Commit]($COMMIT_URL)" \
             -d parse_mode=Markdown
-            
