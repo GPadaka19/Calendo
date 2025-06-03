@@ -110,6 +110,16 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/Calendo
+            # Verify .env file
+            echo "Checking .env file..."
+            ls -la .env
+            echo "Checking if required variables exist (without showing values)..."
+            grep -q "DB_HOST" .env && echo "DB_HOST exists" || echo "DB_HOST missing"
+            grep -q "DB_PORT" .env && echo "DB_PORT exists" || echo "DB_PORT missing"
+            grep -q "DB_USER" .env && echo "DB_USER exists" || echo "DB_USER missing"
+            grep -q "DB_PASSWORD" .env && echo "DB_PASSWORD exists" || echo "DB_PASSWORD missing"
+            grep -q "DB_NAME" .env && echo "DB_NAME exists" || echo "DB_NAME missing"
+            
             # Deploy backend first
             cd backend
             # Use go.sum from local

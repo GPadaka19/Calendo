@@ -5,6 +5,8 @@ services:
     container_name: calendo-backend
     ports:
       - "8080:8080"
+    env_file:
+      - ../.env
     environment:
       - N8N_API_URL=http://n8n:5678
       - N8N_API_KEY=${N8N_API_KEY}
