@@ -22,8 +22,6 @@ jobs:
     name: Build Backend
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -114,7 +112,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
-          path: .
+          path: downloaded-artifacts
 
       - name: Clean old project folder on VPS
         uses: appleboy/ssh-action@v1.0.0
@@ -132,17 +130,17 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: |
-            ./frontend/.next
-            ./frontend/Dockerfile
-            ./frontend/docker-compose.yml
-            ./frontend/default.conf
-            ./backend/docker-compose.yml
-            ./backend/Dockerfile
-            ./backend/database
-            ./backend/go.mod
-            ./backend/go.sum
-            ./backend/main
-            ./.env
+            ./downloaded-artifacts/frontend/.next
+            ./downloaded-artifacts/frontend/Dockerfile
+            ./downloaded-artifacts/frontend/docker-compose.yml
+            ./downloaded-artifacts/frontend/default.conf
+            ./downloaded-artifacts/backend/docker-compose.yml
+            ./downloaded-artifacts/backend/Dockerfile
+            ./downloaded-artifacts/backend/database
+            ./downloaded-artifacts/backend/go.mod
+            ./downloaded-artifacts/backend/go.sum
+            ./downloaded-artifacts/backend/main
+            ./downloaded-artifacts/.env
           target: ~/Calendo
           debug: true
 
