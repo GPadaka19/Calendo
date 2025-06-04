@@ -9,16 +9,8 @@ services:
       - "8080:8080"
     env_file:
       - ../.env
-    # environment:
-    #   - N8N_API_URL=${N8N_API_URL}
-    #   - N8N_API_KEY=${N8N_API_KEY}
-    #   - DB_HOST=${DB_HOST}
-    #   - DB_PORT=${DB_PORT}
-    #   - DB_USER=${DB_USER}
-    #   - DB_PASSWORD=${DB_PASSWORD}
-    #   - DB_NAME=${DB_NAME}
     networks:
-      - calendo-network
+      - calendo-net
     restart: unless-stopped
 
 volumes:
@@ -26,6 +18,6 @@ volumes:
     name: calendo-postgres-data
 
 networks:
-  calendo-network:
-    name: calendo-network
+  calendo-net:
+    name: calendo-net
     external: true

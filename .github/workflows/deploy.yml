@@ -22,6 +22,8 @@ jobs:
     name: Build Backend
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -44,8 +46,17 @@ jobs:
           cd backend
           go mod tidy
           go mod download
-          go mod verify
           go build -o main ./cmd
+
+      - name: Copy backend files for deployment
+        run: |
+          mkdir -p staging/backend
+          cp backend/main staging/backend/
+          cp backend/Dockerfile staging/backend/
+          cp backend/docker-compose.yml staging/backend/
+          cp -r backend/database staging/backend/
+          cp backend/go.mod staging/backend/
+          cp backend/go.sum staging/backend/
 
   build-frontend:
     name: Build Frontend
@@ -68,14 +79,25 @@ jobs:
           npm install
           npm run build
 
+      - name: Copy frontend files for deployment
+        run: |
+          mkdir -p staging/frontend
+          cp -r frontend/.next staging/frontend/
+          cp frontend/Dockerfile staging/frontend/
+          cp frontend/docker-compose.yml staging/frontend/
+          cp frontend/default.conf staging/frontend/
+
   create-env:
     name: Create .env file
     needs: [build-backend, build-frontend]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: Create .env file from secrets
         run: |
-          cat <<EOF > .env
+          cat <<EOF > staging/.env
           DB_HOST=${{ secrets.DB_HOST }}
           DB_PORT=${{ secrets.DB_PORT }}
           DB_USER=${{ secrets.DB_USER }}
@@ -88,17 +110,11 @@ jobs:
           N8N_PROTOCOL=${{ secrets.N8N_PROTOCOL }}
           EOF
 
-      - name: List .env file content for debug
-        run: cat .env
-
-      - name: Upload build artifacts
+      - name: Upload all artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: |
-            .env
-            frontend/.next
-            backend/main
+          path: staging/
 
   deploy:
     name: Deploy to VPS
@@ -123,24 +139,13 @@ jobs:
           script: |
             rm -rf ~/Calendo
 
-      - name: Copy project files + .env to VPS
+      - name: Copy project files to VPS
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: |
-            ./downloaded-artifacts/frontend/.next
-            ./downloaded-artifacts/frontend/Dockerfile
-            ./downloaded-artifacts/frontend/docker-compose.yml
-            ./downloaded-artifacts/frontend/default.conf
-            ./downloaded-artifacts/backend/docker-compose.yml
-            ./downloaded-artifacts/backend/Dockerfile
-            ./downloaded-artifacts/backend/database
-            ./downloaded-artifacts/backend/go.mod
-            ./downloaded-artifacts/backend/go.sum
-            ./downloaded-artifacts/backend/main
-            ./downloaded-artifacts/.env
+          source: downloaded-artifacts/*
           target: ~/Calendo
           debug: true
 
@@ -153,33 +158,25 @@ jobs:
           script: |
             cd ~/Calendo
 
-            echo "Listing Calendo folder content:"
-            ls -l
-
-            echo "Checking .env file existence and content:"
+            echo "Checking .env..."
             if [ -f ".env" ]; then
-              echo ".env found ✅"
-              head -n 10 .env
+              echo ".env found"
             else
-              echo "❌ .env file not found! Abort deployment."
+              echo ".env not found"
               exit 1
             fi
 
             echo "Deploying Backend..."
             cd backend
-            go mod download
-            go mod verify
             docker compose down
-            docker compose build --no-cache
-            docker compose up -d
+            docker compose up -d --no-build
 
             echo "Deploying Frontend..."
             cd ../frontend
             docker compose down
-            docker compose build --no-cache
-            docker compose up -d
+            docker compose up -d --no-build
 
-            echo "Cleaning up unused Docker images..."
+            echo "Pruning Docker images..."
             docker image prune -f
 
       - name: Send Telegram notification (Success)
