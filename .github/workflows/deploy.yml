@@ -93,6 +93,15 @@ jobs:
       - name: List .env file content for debug
         run: cat .env
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: |
+            .env
+            frontend/.next
+            backend/main
+
   deploy:
     name: Deploy to VPS
     needs: create-env
@@ -101,42 +110,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Create .env file from secrets
-        run: |
-          cat <<EOF > .env
-          DB_HOST=${{ secrets.DB_HOST }}
-          DB_PORT=${{ secrets.DB_PORT }}
-          DB_USER=${{ secrets.DB_USER }}
-          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-          DB_NAME=${{ secrets.DB_NAME }}
-          N8N_API_URL=${{ secrets.N8N_API_URL }}
-          N8N_API_KEY=${{ secrets.N8N_API_KEY }}
-          N8N_ENCRYPTION_KEY=${{ secrets.N8N_ENCRYPTION_KEY }}
-          N8N_HOST=${{ secrets.N8N_HOST }}
-          N8N_PROTOCOL=${{ secrets.N8N_PROTOCOL }}
-          EOF
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: 'frontend/package-lock.json'
-
-      - name: Build Frontend
-        run: |
-          cd frontend
-          npm install
-          npm run build
-
-      - name: List files before copying
-        run: |
-          echo "Listing frontend files:"
-          ls -la frontend/
-          echo "Listing backend files:"
-          ls -la backend/
-          echo "Listing .env file:"
-          ls -la .env
+          name: build-artifacts
+          path: .
 
       - name: Clean old project folder on VPS
         uses: appleboy/ssh-action@v1.0.0
@@ -154,7 +132,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: |
-            ./frontend/out
+            ./frontend/.next
             ./frontend/Dockerfile
             ./frontend/docker-compose.yml
             ./frontend/default.conf
@@ -163,8 +141,7 @@ jobs:
             ./backend/database
             ./backend/go.mod
             ./backend/go.sum
-            ./backend/cmd
-            ./backend/internal
+            ./backend/main
             ./.env
           target: ~/Calendo
           debug: true
@@ -177,10 +154,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/Calendo
+
             echo "Listing Calendo folder content:"
             ls -l
 
-            echo "Check .env file existence and content:"
+            echo "Checking .env file existence and content:"
             if [ -f ".env" ]; then
               echo ".env found ✅"
               head -n 10 .env
@@ -193,18 +171,18 @@ jobs:
             cd backend
             go mod download
             go mod verify
-            sudo docker compose down
-            sudo docker compose build --no-cache
-            sudo docker compose up -d
+            docker compose down
+            docker compose build --no-cache
+            docker compose up -d
 
             echo "Deploying Frontend..."
             cd ../frontend
-            sudo docker compose down
-            sudo docker compose build --no-cache
-            sudo docker compose up -d
+            docker compose down
+            docker compose build --no-cache
+            docker compose up -d
 
             echo "Cleaning up unused Docker images..."
-            sudo docker image prune -f
+            docker image prune -f
 
       - name: Send Telegram notification (Success)
         if: success()

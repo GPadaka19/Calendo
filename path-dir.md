@@ -1,0 +1,344 @@
+.
+├── architecture.md
+├── backend
+│   ├── Dockerfile
+│   ├── cmd
+│   │   └── main.go
+│   ├── database
+│   │   └── migrations
+│   ├── docker-compose.yml
+│   ├── go.mod
+│   ├── go.sum
+│   └── internal
+│       ├── database
+│       └── n8n
+├── frontend
+│   ├── Dockerfile
+│   ├── README.md
+│   ├── default.conf
+│   ├── docker-compose.yml
+│   ├── eslint.config.mjs
+│   ├── next-env.d.ts
+│   ├── next.config.js
+│   ├── next.config.ts
+│   ├── node_modules
+│   │   ├── @alloc
+│   │   ├── @ampproject
+│   │   ├── @emnapi
+│   │   ├── @eslint
+│   │   ├── @eslint-community
+│   │   ├── @heroicons
+│   │   ├── @humanfs
+│   │   ├── @humanwhocodes
+│   │   ├── @img
+│   │   ├── @isaacs
+│   │   ├── @jridgewell
+│   │   ├── @napi-rs
+│   │   ├── @next
+│   │   ├── @nodelib
+│   │   ├── @nolyfill
+│   │   ├── @rtsao
+│   │   ├── @rushstack
+│   │   ├── @swc
+│   │   ├── @tailwindcss
+│   │   ├── @tybys
+│   │   ├── @types
+│   │   ├── @typescript-eslint
+│   │   ├── @unrs
+│   │   ├── acorn
+│   │   ├── acorn-jsx
+│   │   ├── ajv
+│   │   ├── ansi-styles
+│   │   ├── argparse
+│   │   ├── aria-query
+│   │   ├── array-buffer-byte-length
+│   │   ├── array-includes
+│   │   ├── array.prototype.findlast
+│   │   ├── array.prototype.findlastindex
+│   │   ├── array.prototype.flat
+│   │   ├── array.prototype.flatmap
+│   │   ├── array.prototype.tosorted
+│   │   ├── arraybuffer.prototype.slice
+│   │   ├── ast-types-flow
+│   │   ├── async-function
+│   │   ├── available-typed-arrays
+│   │   ├── axe-core
+│   │   ├── axobject-query
+│   │   ├── balanced-match
+│   │   ├── brace-expansion
+│   │   ├── braces
+│   │   ├── busboy
+│   │   ├── call-bind
+│   │   ├── call-bind-apply-helpers
+│   │   ├── call-bound
+│   │   ├── callsites
+│   │   ├── caniuse-lite
+│   │   ├── chalk
+│   │   ├── chownr
+│   │   ├── client-only
+│   │   ├── color
+│   │   ├── color-convert
+│   │   ├── color-name
+│   │   ├── color-string
+│   │   ├── concat-map
+│   │   ├── cross-spawn
+│   │   ├── csstype
+│   │   ├── damerau-levenshtein
+│   │   ├── data-view-buffer
+│   │   ├── data-view-byte-length
+│   │   ├── data-view-byte-offset
+│   │   ├── debug
+│   │   ├── deep-is
+│   │   ├── define-data-property
+│   │   ├── define-properties
+│   │   ├── detect-libc
+│   │   ├── doctrine
+│   │   ├── dunder-proto
+│   │   ├── emoji-regex
+│   │   ├── enhanced-resolve
+│   │   ├── es-abstract
+│   │   ├── es-define-property
+│   │   ├── es-errors
+│   │   ├── es-iterator-helpers
+│   │   ├── es-object-atoms
+│   │   ├── es-set-tostringtag
+│   │   ├── es-shim-unscopables
+│   │   ├── es-to-primitive
+│   │   ├── escape-string-regexp
+│   │   ├── eslint
+│   │   ├── eslint-config-next
+│   │   ├── eslint-import-resolver-node
+│   │   ├── eslint-import-resolver-typescript
+│   │   ├── eslint-module-utils
+│   │   ├── eslint-plugin-import
+│   │   ├── eslint-plugin-jsx-a11y
+│   │   ├── eslint-plugin-react
+│   │   ├── eslint-plugin-react-hooks
+│   │   ├── eslint-scope
+│   │   ├── eslint-visitor-keys
+│   │   ├── espree
+│   │   ├── esquery
+│   │   ├── esrecurse
+│   │   ├── estraverse
+│   │   ├── esutils
+│   │   ├── fast-deep-equal
+│   │   ├── fast-glob
+│   │   ├── fast-json-stable-stringify
+│   │   ├── fast-levenshtein
+│   │   ├── fastq
+│   │   ├── file-entry-cache
+│   │   ├── fill-range
+│   │   ├── find-up
+│   │   ├── flat-cache
+│   │   ├── flatted
+│   │   ├── for-each
+│   │   ├── function-bind
+│   │   ├── function.prototype.name
+│   │   ├── functions-have-names
+│   │   ├── get-intrinsic
+│   │   ├── get-proto
+│   │   ├── get-symbol-description
+│   │   ├── get-tsconfig
+│   │   ├── glob-parent
+│   │   ├── globals
+│   │   ├── globalthis
+│   │   ├── gopd
+│   │   ├── graceful-fs
+│   │   ├── graphemer
+│   │   ├── has-bigints
+│   │   ├── has-flag
+│   │   ├── has-property-descriptors
+│   │   ├── has-proto
+│   │   ├── has-symbols
+│   │   ├── has-tostringtag
+│   │   ├── hasown
+│   │   ├── ignore
+│   │   ├── import-fresh
+│   │   ├── imurmurhash
+│   │   ├── internal-slot
+│   │   ├── is-array-buffer
+│   │   ├── is-arrayish
+│   │   ├── is-async-function
+│   │   ├── is-bigint
+│   │   ├── is-boolean-object
+│   │   ├── is-bun-module
+│   │   ├── is-callable
+│   │   ├── is-core-module
+│   │   ├── is-data-view
+│   │   ├── is-date-object
+│   │   ├── is-extglob
+│   │   ├── is-finalizationregistry
+│   │   ├── is-generator-function
+│   │   ├── is-glob
+│   │   ├── is-map
+│   │   ├── is-number
+│   │   ├── is-number-object
+│   │   ├── is-regex
+│   │   ├── is-set
+│   │   ├── is-shared-array-buffer
+│   │   ├── is-string
+│   │   ├── is-symbol
+│   │   ├── is-typed-array
+│   │   ├── is-weakmap
+│   │   ├── is-weakref
+│   │   ├── is-weakset
+│   │   ├── isarray
+│   │   ├── isexe
+│   │   ├── iterator.prototype
+│   │   ├── jiti
+│   │   ├── js-tokens
+│   │   ├── js-yaml
+│   │   ├── json-buffer
+│   │   ├── json-schema-traverse
+│   │   ├── json-stable-stringify-without-jsonify
+│   │   ├── json5
+│   │   ├── jsx-ast-utils
+│   │   ├── keyv
+│   │   ├── language-subtag-registry
+│   │   ├── language-tags
+│   │   ├── levn
+│   │   ├── lightningcss
+│   │   ├── lightningcss-darwin-arm64
+│   │   ├── locate-path
+│   │   ├── lodash.merge
+│   │   ├── loose-envify
+│   │   ├── magic-string
+│   │   ├── math-intrinsics
+│   │   ├── merge2
+│   │   ├── micromatch
+│   │   ├── minimatch
+│   │   ├── minimist
+│   │   ├── minipass
+│   │   ├── minizlib
+│   │   ├── mkdirp
+│   │   ├── ms
+│   │   ├── nanoid
+│   │   ├── napi-postinstall
+│   │   ├── natural-compare
+│   │   ├── next
+│   │   ├── object-assign
+│   │   ├── object-inspect
+│   │   ├── object-keys
+│   │   ├── object.assign
+│   │   ├── object.entries
+│   │   ├── object.fromentries
+│   │   ├── object.groupby
+│   │   ├── object.values
+│   │   ├── optionator
+│   │   ├── own-keys
+│   │   ├── p-limit
+│   │   ├── p-locate
+│   │   ├── parent-module
+│   │   ├── path-exists
+│   │   ├── path-key
+│   │   ├── path-parse
+│   │   ├── picocolors
+│   │   ├── picomatch
+│   │   ├── possible-typed-array-names
+│   │   ├── postcss
+│   │   ├── prelude-ls
+│   │   ├── prop-types
+│   │   ├── punycode
+│   │   ├── queue-microtask
+│   │   ├── react
+│   │   ├── react-dom
+│   │   ├── react-is
+│   │   ├── reflect.getprototypeof
+│   │   ├── regexp.prototype.flags
+│   │   ├── resolve
+│   │   ├── resolve-from
+│   │   ├── resolve-pkg-maps
+│   │   ├── reusify
+│   │   ├── run-parallel
+│   │   ├── safe-array-concat
+│   │   ├── safe-push-apply
+│   │   ├── safe-regex-test
+│   │   ├── scheduler
+│   │   ├── semver
+│   │   ├── set-function-length
+│   │   ├── set-function-name
+│   │   ├── set-proto
+│   │   ├── sharp
+│   │   ├── shebang-command
+│   │   ├── shebang-regex
+│   │   ├── side-channel
+│   │   ├── side-channel-list
+│   │   ├── side-channel-map
+│   │   ├── side-channel-weakmap
+│   │   ├── simple-swizzle
+│   │   ├── source-map-js
+│   │   ├── stable-hash
+│   │   ├── streamsearch
+│   │   ├── string.prototype.includes
+│   │   ├── string.prototype.matchall
+│   │   ├── string.prototype.repeat
+│   │   ├── string.prototype.trim
+│   │   ├── string.prototype.trimend
+│   │   ├── string.prototype.trimstart
+│   │   ├── strip-bom
+│   │   ├── strip-json-comments
+│   │   ├── styled-jsx
+│   │   ├── supports-color
+│   │   ├── supports-preserve-symlinks-flag
+│   │   ├── tailwindcss
+│   │   ├── tapable
+│   │   ├── tar
+│   │   ├── tinyglobby
+│   │   ├── to-regex-range
+│   │   ├── ts-api-utils
+│   │   ├── tsconfig-paths
+│   │   ├── tslib
+│   │   ├── type-check
+│   │   ├── typed-array-buffer
+│   │   ├── typed-array-byte-length
+│   │   ├── typed-array-byte-offset
+│   │   ├── typed-array-length
+│   │   ├── typescript
+│   │   ├── unbox-primitive
+│   │   ├── undici-types
+│   │   ├── unrs-resolver
+│   │   ├── uri-js
+│   │   ├── which
+│   │   ├── which-boxed-primitive
+│   │   ├── which-builtin-type
+│   │   ├── which-collection
+│   │   ├── which-typed-array
+│   │   ├── word-wrap
+│   │   ├── yallist
+│   │   └── yocto-queue
+│   ├── out
+│   │   ├── 404.html
+│   │   ├── _next
+│   │   ├── favicon.ico
+│   │   ├── file.svg
+│   │   ├── globe.svg
+│   │   ├── hero-calendar.svg
+│   │   ├── hero-image.svg
+│   │   ├── index.html
+│   │   ├── index.txt
+│   │   ├── next.svg
+│   │   ├── testimonials
+│   │   ├── vercel.svg
+│   │   └── window.svg
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.mjs
+│   ├── public
+│   │   ├── file.svg
+│   │   ├── globe.svg
+│   │   ├── hero-calendar.svg
+│   │   ├── hero-image.svg
+│   │   ├── next.svg
+│   │   ├── testimonials
+│   │   ├── vercel.svg
+│   │   └── window.svg
+│   ├── src
+│   │   ├── app
+│   │   ├── components
+│   │   └── utils
+│   └── tsconfig.json
+├── package-lock.json
+├── path-dir.md
+└── task.md
+
+303 directories, 39 files
