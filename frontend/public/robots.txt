@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://calendo.gpadaka.com/sitemap.xml 
