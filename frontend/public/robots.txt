@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://calendo.gpadaka.com/sitemap.xml 
+Sitemap: https://gpadaka.com/sitemap.xml 
