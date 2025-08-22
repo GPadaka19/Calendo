@@ -1,6 +1,5 @@
 services:
   calendo-fe:
-    image: calendo-fe:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,5 +12,4 @@ services:
 
 networks:
   calendo-network:
-    name: calendo-network
-    driver: bridge 
+    driver: bridge
