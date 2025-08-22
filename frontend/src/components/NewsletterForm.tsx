@@ -24,7 +24,7 @@ export default function NewsletterForm() {
       setStatus('success');
       setMessage('Thanks for subscribing!');
       setEmail('');
-    } catch (error) {
+    } catch {
       setStatus('error');
       setMessage('Something went wrong. Please try again.');
     }
